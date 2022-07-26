@@ -30,9 +30,18 @@ app.get('/notes', (req, res) => {
     res.sendFile(path.join(__dirname + './public/notes.html'));
 });
 
+//creating function to create a new note
+function addNewNote(noteBody, noteData) {
+    const newNote = noteBody;
+    if(!Array.isArray(noteData)) 
+        noteData = [];
 
-
-
+        if(noteData.length === 0) {
+            noteData.push(newNote);
+        }
+    noteBody.id = noteData[0]
+    noteBody[0]++;
+    noteData.push(newNote);
 
 
 
