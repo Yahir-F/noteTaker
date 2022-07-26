@@ -32,7 +32,7 @@ app.get('/notes', (req, res) => {
 
 //creating function to create a new note
 function addNewNote(noteBody, noteData) {
-    const newNote = noteBody;
+    const noteNew = noteBody;
     if(!Array.isArray(noteData)) 
         noteData = [];
 
@@ -42,6 +42,13 @@ function addNewNote(noteBody, noteData) {
     noteBody.id = noteData[0]
     noteBody[0]++;
     noteData.push(newNote);
+
+    fs.writeFileSync(
+        path.join(__dirname, "db/db.json"),
+        JSON.stringify(noteData, null)
+    );
+    return noteNew
+}
 
 
 
