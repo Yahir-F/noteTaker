@@ -5,7 +5,6 @@ const noteData = require('./db/db.json');
 const fs = require("fs")
 //setting port
 const PORT = process.env.PORT || 8080
-
 // requiring the express module
 const express = require("express")
 const app = express()
@@ -29,7 +28,6 @@ app.get('*', (req, res) => {
 app.get('/notes', (req, res) => {
     res.sendFile(path.join(__dirname + './public/notes.html'));
 });
-
 //creating function to create a new note
 function addNewNote(noteBody, noteData) {
     const noteNew = noteBody;
@@ -43,14 +41,45 @@ function addNewNote(noteBody, noteData) {
     noteBody[0]++;
     noteData.push(newNote);
 
+    
     fs.writeFileSync(
         path.join(__dirname, "db/db.json"),
         JSON.stringify(noteData, null)
     );
     return noteNew
 }
+//route
+app.post('/api/notes', (req, res) => {
+    const noteNew = addNewNote(req.body, noteData);
+    res.json(noteNew);
+});
+//remove note function 
+function noteRemove(id, noteData) {
+   
+    for(let i = 0; i < noteData.length; i++) {
+     
+        let info = noteData[i];
+        if(info.id === id) {
+            noteData.splice(i, 1);
+        
+            fs.writeFileSync(
+                path.join(__dirname, "db/db.json"),
+      
+                JSON.stringify(noteData, null)
+            );
+            break;
+        }
+    }
+}
 
 
+
+
+
+app.delete('/api/notes/:id', (req, res) => {
+    noteRemove(req.params.id, noteData);
+    res.json(noteData);
+});
 
 
 
